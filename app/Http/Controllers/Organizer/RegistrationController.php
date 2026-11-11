@@ -46,13 +46,13 @@ class RegistrationController extends Controller
                 $slug .= '-'.Str::lower(Str::random(4));
             }
 
-            Organizer::create([
+            $organizer = Organizer::create([
                 'user_id' => $user->id,
                 'name' => $data['structure_name'],
                 'slug' => $slug,
                 'phone' => $data['phone'],
-                'status' => 'pending',
             ]);
+            $organizer->forceFill(['status' => 'pending'])->save();
 
             return $user;
         });

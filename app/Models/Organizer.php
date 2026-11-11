@@ -10,7 +10,7 @@ class Organizer extends Model
 {
     protected $fillable = [
         'user_id', 'name', 'slug', 'description', 'logo', 'phone',
-        'payout_operator', 'payout_phone', 'commission_rate', 'status',
+        'payout_operator', 'payout_phone',
     ];
 
     public function user(): BelongsTo

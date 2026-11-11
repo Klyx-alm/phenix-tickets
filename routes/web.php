@@ -65,11 +65,11 @@ Route::middleware('auth')->group(function () {
 
     // Commander demande un compte
     Route::get('/mes-billets', [MyOrdersController::class, 'index'])->name('orders.index');
-    Route::post('/evenements/{event:slug}/commander', [OrderController::class, 'store'])->name('orders.store');
+    Route::post('/evenements/{event:slug}/commander', [OrderController::class, 'store'])->middleware('throttle:10,1')->name('orders.store');
 
     Route::middleware(EnsureOrderOwner::class)->group(function () {
         Route::get('/commande/{order:reference}', [OrderController::class, 'show'])->name('orders.show');
-        Route::post('/commande/{order:reference}/payer', [PaymentController::class, 'pay'])->name('orders.pay');
+        Route::post('/commande/{order:reference}/payer', [PaymentController::class, 'pay'])->middleware('throttle:10,1')->name('orders.pay');
         Route::get('/commande/{order:reference}/billets.pdf', [TicketController::class, 'orderPdf'])->name('orders.pdf');
     });
 });
@@ -84,7 +84,7 @@ Route::middleware(['auth', 'role:organizer'])->prefix('organisateur')->name('org
 // Scanner des billets (admins et organisateurs)
 Route::middleware(['auth', 'role:admin,organizer'])->group(function () {
     Route::get('/scanner', [ScannerController::class, 'index'])->name('scanner.index');
-    Route::post('/scanner/valider', [ScannerController::class, 'validateTicket'])->name('scanner.validate');
+    Route::post('/scanner/valider', [ScannerController::class, 'validateTicket'])->middleware('throttle:60,1')->name('scanner.validate');
 });
 
 

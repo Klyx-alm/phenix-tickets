@@ -93,14 +93,17 @@ class PaymentController extends Controller
         $raw = $request->getContent();
         $secret = config('fedapay.webhook_secret');
 
-        if ($secret) {
-            try {
-                \FedaPay\Webhook::constructEvent($raw, (string) $request->header('X-FEDAPAY-SIGNATURE'), $secret);
-            } catch (\Throwable $e) {
-                report($e);
+        // Securite : refuser le webhook si le secret n'est pas configure
+        if (! $secret) {
+            return response('Webhook secret non configuré', 503);
+        }
 
-                return response('Signature invalide', 400);
-            }
+        try {
+            \FedaPay\Webhook::constructEvent($raw, (string) $request->header('X-FEDAPAY-SIGNATURE'), $secret);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response('Signature invalide', 400);
         }
 
         $payload = json_decode($raw, true) ?: [];
