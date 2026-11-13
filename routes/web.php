@@ -14,6 +14,8 @@ use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\TicketController;
 use App\Http\Middleware\EnsureOrderOwner;
 use App\Models\Event;
+use App\Models\TeamMember;
+use App\Models\Video;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,7 +25,12 @@ Route::get('/', function () {
         ->orderBy('starts_at')
         ->get();
 
-    return view('welcome', ['events' => $events, 'featured' => $events->first()]);
+    return view('welcome', [
+        'events' => $events,
+        'featured' => $events->first(),
+        'team' => TeamMember::visible()->ordered()->get(),
+        'videos' => Video::visible()->ordered()->get(),
+    ]);
 });
 
 // Pages publiques
@@ -155,4 +162,22 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/evenements', [\App\Http\Controllers\Admin\EventController::class, 'index'])->name('events');
     Route::post('/evenements/{event}/annuler', [\App\Http\Controllers\Admin\EventController::class, 'cancel'])->name('events.cancel');
     Route::post('/commandes/{order}/rembourser', [\App\Http\Controllers\Admin\SalesController::class, 'refund'])->name('orders.refund');
+});
+
+// Page d'accueil de l'agence : équipe et vidéos TikTok (admin)
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/equipe', [\App\Http\Controllers\Admin\TeamMemberController::class, 'index'])->name('team');
+    Route::get('/equipe/ajouter', [\App\Http\Controllers\Admin\TeamMemberController::class, 'create'])->name('team.create');
+    Route::post('/equipe', [\App\Http\Controllers\Admin\TeamMemberController::class, 'store'])->name('team.store');
+    Route::get('/equipe/{member}/modifier', [\App\Http\Controllers\Admin\TeamMemberController::class, 'edit'])->name('team.edit');
+    Route::put('/equipe/{member}', [\App\Http\Controllers\Admin\TeamMemberController::class, 'update'])->name('team.update');
+    Route::delete('/equipe/{member}', [\App\Http\Controllers\Admin\TeamMemberController::class, 'destroy'])->name('team.destroy');
+
+    Route::get('/videos', [\App\Http\Controllers\Admin\VideoController::class, 'index'])->name('videos');
+    Route::get('/videos/ajouter', [\App\Http\Controllers\Admin\VideoController::class, 'create'])->name('videos.create');
+    Route::post('/videos', [\App\Http\Controllers\Admin\VideoController::class, 'store'])->name('videos.store');
+    Route::get('/videos/{video}/modifier', [\App\Http\Controllers\Admin\VideoController::class, 'edit'])->name('videos.edit');
+    Route::put('/videos/{video}', [\App\Http\Controllers\Admin\VideoController::class, 'update'])->name('videos.update');
+    Route::post('/videos/{video}/miniature', [\App\Http\Controllers\Admin\VideoController::class, 'refreshCover'])->name('videos.cover');
+    Route::delete('/videos/{video}', [\App\Http\Controllers\Admin\VideoController::class, 'destroy'])->name('videos.destroy');
 });

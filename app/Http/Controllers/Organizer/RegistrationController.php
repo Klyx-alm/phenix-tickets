@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Organizer;
 use App\Http\Controllers\Controller;
 use App\Models\Organizer;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Support\EmailVerificationCode;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -57,9 +56,14 @@ class RegistrationController extends Controller
             return $user;
         });
 
-        event(new Registered($user));
-        Auth::login($user);
+        // Le compte n'est PAS connecté : il le sera après la saisie du code reçu par e-mail
+        $sent = EmailVerificationCode::send($user);
+        $request->session()->put('verification_email', $user->email);
 
-        return redirect()->route('organizer.dashboard');
+        $redirect = redirect()->route('verification.code');
+
+        return $sent
+            ? $redirect->with('status', 'Compte créé. Un code à 6 chiffres vient d’être envoyé à votre adresse e-mail.')
+            : $redirect->withErrors(['code' => 'Compte créé, mais l’e-mail n’a pas pu être envoyé. Cliquez sur « renvoyer le code ».']);
     }
 }

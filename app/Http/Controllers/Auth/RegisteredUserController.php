@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Support\EmailVerificationCode;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
@@ -43,10 +42,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        // Le compte n'est PAS connecté : il le sera après la saisie du code reçu par e-mail
+        $sent = EmailVerificationCode::send($user);
+        $request->session()->put('verification_email', $user->email);
 
-        Auth::login($user);
+        $redirect = redirect()->route('verification.code');
 
-        return redirect(route('dashboard', absolute: false));
+        return $sent
+            ? $redirect->with('status', 'Compte créé. Un code à 6 chiffres vient d’être envoyé à votre adresse e-mail.')
+            : $redirect->withErrors(['code' => 'Compte créé, mais l’e-mail n’a pas pu être envoyé. Cliquez sur « renvoyer le code ».']);
     }
 }

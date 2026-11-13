@@ -11,6 +11,8 @@
         'users' => 'M16 8a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM4 20c0-4 4-6 8-6s8 2 8 6',
         'receipt' => 'M5 4h14v16l-3-2-2 2-2-2-2 2-2-2-3 2zM9 9h6M9 13h6',
         'mail' => 'M4 6h16v12H4zM4 7l8 6 8-6',
+        'team' => 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c0-3 2.7-5 6-5s6 2 6 5M17 8a3 3 0 0 1 0 6M21 20c0-2-1.4-3.6-3.5-4.4',
+        'video' => 'M3 6h12v12H3zM15 10l6-3v10l-6-3',
     ];
 
     $nav = $area === 'admin'
@@ -20,6 +22,8 @@
             ['admin.events', 'Événements', 'calendar', ['admin.events*']],
             ['admin.sales', 'Ventes', 'receipt', ['admin.sales']],
             ['admin.messages', 'Messages', 'mail', ['admin.messages*']],
+            ['admin.team', 'Équipe', 'team', ['admin.team*']],
+            ['admin.videos', 'Vidéos', 'video', ['admin.videos*']],
             ['admin.payouts', 'Reversements', 'wallet', ['admin.payouts*']],
             ['scanner.index', 'Scanner', 'scan', ['scanner.*']],
         ]

@@ -21,7 +21,11 @@
                 {{ config('app.name') }}
             </a>
             <nav class="flex flex-wrap items-center gap-4 text-sm font-medium">
-                <a href="/#evenements" class="hidden hover:underline sm:inline">Événements</a>
+                <a href="/#agence" class="hidden hover:underline lg:inline">L’agence</a>
+                <a href="/#realisations" class="hidden hover:underline sm:inline">Réalisations</a>
+                <a href="/#equipe" class="hidden hover:underline sm:inline">Équipe</a>
+                <a href="/#evenements" class="hidden hover:underline sm:inline">Billetterie</a>
+                <a href="{{ route('contact') }}" class="hidden hover:underline md:inline">Contact</a>
                 @auth
                     @php $navUser = auth()->user(); @endphp
                     @if ($navUser->isAdmin())

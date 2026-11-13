@@ -7,13 +7,16 @@
     <div class="mx-auto grid max-w-6xl gap-10 px-6 py-10 md:grid-cols-3">
         <div>
             <img src="{{ asset('images/phenix-logo.png') }}" alt="Phenix Agency" class="h-24 w-auto">
-            <p class="mt-4 max-w-xs text-sm text-white/70">Billetterie en ligne au Bénin : achetez vos billets en Mobile Money, vendez les vôtres simplement.</p>
+            <p class="mt-4 max-w-xs text-sm text-white/70">Agence événementielle : communication, réalisation et promotion d’événements, avec une billetterie en ligne payable en Mobile Money.</p>
         </div>
 
         <div>
             <p class="font-display font-bold">Le site</p>
             <ul class="mt-3 space-y-2 text-sm text-white/80">
-                <li><a href="/#evenements" class="hover:underline">Événements</a></li>
+                <li><a href="/#agence" class="hover:underline">L’agence</a></li>
+                <li><a href="/#realisations" class="hover:underline">Réalisations</a></li>
+                <li><a href="/#equipe" class="hover:underline">Équipe</a></li>
+                <li><a href="/#evenements" class="hover:underline">Billetterie</a></li>
                 <li><a href="{{ route('help') }}" class="hover:underline">Aide</a></li>
                 <li><a href="{{ route('contact') }}" class="hover:underline">Contactez-nous</a></li>
                 <li><a href="{{ $sellUrl }}" class="hover:underline">Vendre mes billets</a></li>
